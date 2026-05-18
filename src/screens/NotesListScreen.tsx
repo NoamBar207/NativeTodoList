@@ -1,10 +1,11 @@
 import React, { useState, useCallback } from 'react';
-import { View, FlatList, StyleSheet, Alert, RefreshControl } from 'react-native';
+import { View, FlatList, StyleSheet, RefreshControl } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Note } from '../models/types';
 import EmptyState from '../components/NotesList/EmptyState';
 import NoteCard from '../components/NotesList/NoteCard';
 import EditNoteModal from '../components/NotesList/EditNoteModal';
+import DeleteNoteModal from '../components/NotesList/DeleteNoteModal';
 import { useNotes } from '../hooks/useNotes';
 import { useEditNote } from '../hooks/useEditNote';
 
@@ -13,6 +14,7 @@ export default function NotesListScreen() {
   const editHook = useEditNote();
 
   const [refreshing, setRefreshing] = useState(false);
+  const [noteToDelete, setNoteToDelete] = useState<string | null>(null);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -22,10 +24,7 @@ export default function NotesListScreen() {
   }, []);
 
   const handleDelete = (id: string) => {
-    Alert.alert('Discard Note', 'Are you sure you want to permanently delete this note?', [
-      { text: 'Keep', style: 'cancel' },
-      { text: 'Delete', style: 'destructive', onPress: () => deleteNote(id) },
-    ]);
+    setNoteToDelete(id);
   };
 
   return (
@@ -67,6 +66,16 @@ export default function NotesListScreen() {
           onTakePhoto={editHook.handleTakePhoto}
           onSelectGallery={editHook.handleSelectGallery}
           onRemoveImage={editHook.handleRemoveImage}
+        />
+        <DeleteNoteModal
+          visible={!!noteToDelete}
+          onCancel={() => setNoteToDelete(null)}
+          onConfirm={() => {
+            if (noteToDelete) {
+              deleteNote(noteToDelete);
+            }
+            setNoteToDelete(null);
+          }}
         />
       </View>
     </SafeAreaView>
