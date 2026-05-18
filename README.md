@@ -1,97 +1,76 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# 📍 Location-Based Notes App
 
-# Getting Started
+![React Native](https://img.shields.io/badge/React_Native-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![Redux](https://img.shields.io/badge/Redux-593D88?style=for-the-badge&logo=redux&logoColor=white)
+![Android](https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+## 📖 App Overview
+A premium, production-grade location-based Notes App built with **React Native CLI** and **Redux Toolkit**. This application allows users to seamlessly capture their thoughts, automatically attaching the exact GPS coordinates to each note. The app features robust data persistence, highly responsive UI, and graceful error handling.
 
-## Step 1: Start Metro
+## ✨ Core Features (Reduced Scope Achieved)
+* **Bottom Tab Navigation**: Clean and intuitive navigation between the "Notes List" and "Create Note" screens.
+* **Create Notes**: Form includes a mandatory Title field, optional Content, and an automatically generated timestamp.
+* **Automatic Geolocation**: Fetches the device's GPS coordinates upon note creation, with graceful handling of Android permissions.
+* **Chronological Feed**: Notes are displayed in a beautifully styled list from newest to oldest.
+* **Delete Functionality**: Safely and permanently remove notes from the list.
+* **Complete Data Persistence**: State is persisted locally using Redux Persist—closing or restarting the app will not wipe your notes.
+* **Production-Grade Validation**: Strict form validation with clear, user-friendly error alerts.
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+## 🚀 Premium Features (Added Proactively)
+To deliver a significantly better User Experience (UX), the following extra features were added despite the officially reduced scope:
+* **Image Attachments**: Attach images to notes via Camera or Gallery, seamlessly handling Android permissions and persisting the image data.
+* **Instant Inline Editing**: Edit the title and content of an existing note directly from the list view via a polished modal.
+* **Pull-to-Refresh**: Native pull-to-refresh functionality integrated smoothly into the notes list.
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+---
 
-```sh
-# Using npm
-npm start
+## 🏛️ Architectural Decisions & Assumptions
 
-# OR using Yarn
-yarn start
+* **Android-Only Development**: Due to local hardware constraints, this project was developed, configured, and tested exclusively for Android. There is no iOS configuration provided.
+* **Reduced Scope + Extras**: While the assignment scope was officially reduced (removing Authentication and Maps integration), I proactively chose to implement the "Edit Note" and "Pull-to-Refresh" features from the original requirements to deliver a polished end product.
+* **Separation of Concerns**: UI components strictly handle rendering. All complex business logic and native API interactions are extracted into Custom Hooks (e.g., `useLocation`, `useNotes`).
+* **State Management**: Redux Toolkit was chosen for scalable global state management, combined with Redux Persist for immediate UI updates without reloading and long-term storage reliability.
+
+---
+
+## 🐛 Known Bugs & Emulator Limitations
+
+* **Emulator Gallery Error**: When testing on a standard Android Emulator, pressing the "Gallery" button may throw a `Gallery error: no activity found to handle intent` Toast message. This is **not a code bug**, but rather an emulator limitation—most stock Android emulators do not come with a default "Gallery" or "Photos" app installed out of the box, meaning the Android OS has no application to open when requested. 
+  * **Workaround**: Either use the "Camera" button (which uses the emulator's default virtual camera), or install "Google Photos" from the Play Store on your emulator to provide a gallery activity.
+
+---
+
+## 📦 Main Libraries & Reasoning
+
+* **`@reduxjs/toolkit` & `react-redux`**: The industry standard for managing complex global state in a scalable way. We utilized memoized selectors (`createSelector`) to optimize re-renders.
+* **`redux-persist` & `@react-native-async-storage/async-storage`**: Used to save the Redux store locally to the device, ensuring notes survive app restarts.
+* **`@react-navigation/native` & `@react-navigation/bottom-tabs`**: Provides smooth, native-feeling routing and the customizable bottom tab interface.
+* **`react-native-geolocation-service` & `react-native-permissions`**: Chosen for highly accurate GPS fetching and strict, standardized handling of Android OS-level location permissions.
+* **`react-hook-form` & `zod`**: Implemented for production-grade form validation. Zod provides strict schema definitions, while react-hook-form prevents unnecessary re-renders during text input.
+* **`react-native-toast-message`**: Selected to replace basic console logs and default system alerts with a beautiful, slide-in Toast UI for success and error feedback.
+* **`react-native-safe-area-context`**: Essential for adapting the UI beautifully across devices with diverse notches, punch-holes, and gesture bars.
+
+---
+
+## ⚙️ Installation & Running the Project
+
+### Prerequisites
+* Node.js installed.
+* Android Studio and an Android Emulator (or physical device) set up and running.
+
+### Step 1: Install Dependencies
+Open your terminal, navigate to the project directory, and run:
+```bash
+npm install
 ```
 
-## Step 2: Build and run your app
-
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
-
-### Android
-
-```sh
-# Using npm
+### Step 2: Run the Android App
+With your Android emulator running (or a physical device connected), execute:
+```bash
 npm run android
-
-# OR using Yarn
-yarn android
 ```
 
-### iOS
+*(Note: This command will automatically start the Metro Bundler in a separate window. If you ever need to clear the bundler cache, you can run `npm start -- --reset-cache`)*
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
-
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
-
-```sh
-bundle install
-```
-
-Then, and every time you update your native dependencies, run:
-
-```sh
-bundle exec pod install
-```
-
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
-
-```sh
-# Using npm
-npm run ios
-
-# OR using Yarn
-yarn ios
-```
-
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
-
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
-
-## Step 3: Modify your app
-
-Now that you have successfully run the app, let's make changes!
-
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
-
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
-
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+*(Note: This may take a few minutes to run for the first time, as the build process includes downloading Gradle, other dependencies and bundling for the first run)*
